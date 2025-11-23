@@ -76,44 +76,95 @@ window.addEventListener('orientationchange', function() {
     setTimeout(adjustScale, 100);
 });
 
-// Download functionality
-document.getElementById('download-btn').addEventListener('click', function() {
-    const pdfUrl = 'assets/menu-da-venzi-2025.pdf';
-    const link = document.createElement('a');
-    link.href = pdfUrl;
-    link.download = 'menu-da-venzi-2025.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-});
-
-// Facebook link - Update with actual URL
-document.getElementById('facebook-btn').addEventListener('click', function(e) {
-    // Uncomment and update with actual Facebook URL
-    // e.preventDefault();
-    // window.open('https://www.facebook.com/yourpage', '_blank');
+// Function to open app or fallback to web
+function openInAppOrWeb(appUrl, webUrl) {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
-    // For now, prevent default to show it's not configured
-    e.preventDefault();
-    console.log('Facebook link - Update with actual URL');
-});
+    if (isMobile) {
+        // Try to open app using a hidden iframe
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.style.width = '1px';
+        iframe.style.height = '1px';
+        iframe.src = appUrl;
+        document.body.appendChild(iframe);
+        
+        // Check if page becomes hidden (app opened)
+        let appOpened = false;
+        const checkVisibility = function() {
+            if (document.hidden) {
+                appOpened = true;
+            }
+        };
+        document.addEventListener('visibilitychange', checkVisibility);
+        
+        // Fallback: open web URL after delay if app didn't open
+        setTimeout(function() {
+            document.body.removeChild(iframe);
+            document.removeEventListener('visibilitychange', checkVisibility);
+            
+            // If page is still visible after 1 second, app likely didn't open
+            if (!document.hidden) {
+                // Open web URL in new window
+                window.open(webUrl, '_blank', 'noopener,noreferrer');
+            }
+        }, 1000);
+    } else {
+        // Desktop - just open web URL
+        window.open(webUrl, '_blank', 'noopener,noreferrer');
+    }
+}
 
-// Instagram link - Update with actual URL
-document.getElementById('instagram-btn').addEventListener('click', function(e) {
-    // Uncomment and update with actual Instagram URL
-    // e.preventDefault();
-    // window.open('https://www.instagram.com/yourpage', '_blank');
+// Wait for DOM to be ready before attaching event listeners
+function initButtons() {
+    // Download functionality
+    const downloadBtn = document.getElementById('download-btn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const pdfUrl = 'assets/menu-da-venzi-2025.pdf';
+            const link = document.createElement('a');
+            link.href = pdfUrl;
+            link.download = 'menu-da-venzi-2025.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    }
+
+    // Facebook and Instagram - try to open in mobile app first
+    const facebookBtn = document.getElementById('facebook-btn');
+    if (facebookBtn) {
+        facebookBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openInAppOrWeb(facebookBtn.dataset.appUrl, facebookBtn.dataset.webUrl);
+        });
+    }
+
+    const instagramBtn = document.getElementById('instagram-btn');
+    if (instagramBtn) {
+        instagramBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openInAppOrWeb(instagramBtn.dataset.appUrl, instagramBtn.dataset.webUrl);
+        });
+    }
     
-    // For now, prevent default to show it's not configured
-    e.preventDefault();
-    console.log('Instagram link - Update with actual URL');
-});
+    // Website button is disabled (locked)
+    const websiteBtn = document.getElementById('website-btn');
+    if (websiteBtn) {
+        websiteBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Website link is locked');
+        });
+    }
+}
 
-// Website button is disabled (locked)
-document.getElementById('website-btn').addEventListener('click', function(e) {
-    e.preventDefault();
-    console.log('Website link is locked');
-});
+// Initialize buttons when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initButtons);
+} else {
+    initButtons();
+}
 
 // Prevent zoom on double tap for mobile
 let lastTouchEnd = 0;

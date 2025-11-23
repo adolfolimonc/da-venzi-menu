@@ -96,9 +96,16 @@ body {
 .icon {
     width: 24px;
     height: 24px;
-    stroke: white;
-    fill: white;
     margin-bottom: 4px;
+    display: block;
+}
+
+.menu-item img.icon,
+.menu-item img[class*="icon"] {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+    display: block;
 }
 
 .menu-label {
