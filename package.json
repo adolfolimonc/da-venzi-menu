@@ -1,0 +1,17 @@
+{
+  "name": "da-venzi-menu",
+  "version": "1.0.0",
+  "description": "Da Venzi Menu - PDF Viewer with Floating Menu",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'No build step required'"
+  },
+  "keywords": [
+    "menu",
+    "pdf",
+    "restaurant"
+  ],
+  "author": "",
+  "license": "MIT"
+}
+
