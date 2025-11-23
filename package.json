@@ -4,7 +4,7 @@
   "description": "Da Venzi Menu - PDF Viewer with Floating Menu",
   "scripts": {
     "dev": "npx serve .",
-    "build": "echo 'No build step required'"
+    "build": "node build.js"
   },
   "keywords": [
     "menu",
