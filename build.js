@@ -48,5 +48,16 @@ function copyRecursiveSync(src, dest) {
     }
 }
 
+// Verify public directory was created
+if (fs.existsSync(publicDir)) {
+    console.log('✓ Public directory created successfully');
+    const files = fs.readdirSync(publicDir);
+    console.log(`✓ Found ${files.length} items in public directory`);
+} else {
+    console.error('✗ Public directory was not created!');
+    process.exit(1);
+}
+
 console.log('Build complete!');
+process.exit(0);
 
